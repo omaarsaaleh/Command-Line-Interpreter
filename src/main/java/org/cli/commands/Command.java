@@ -1,5 +1,7 @@
 package org.cli.commands;
 
+import java.io.IOException;
+
 public interface Command {
-     String execute(String[] args);
+     String execute(String[] args) ;
 }

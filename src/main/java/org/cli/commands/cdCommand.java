@@ -1,8 +1,19 @@
 package org.cli.commands;
+import org.cli.utils.FileSystemManager;
 
-import java.io.File;
 
 public class cdCommand implements Command{
     @Override
-    public String execute(String[] args){return "not done";}
+    public String execute(String[] args) {
+
+        try {
+            FileSystemManager.getInstance().changeDirectory(args[0]) ;
+            return null ;
+        } catch (Exception e) {
+            return "Cannot find path";
+        }
+
+
+    }
 }
+
