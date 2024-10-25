@@ -14,7 +14,6 @@ public class Main {
         System.out.println(pwd.execute(arg));
         String[] n = {"GGGeeeesssssss"};
         Command dk = new rmdirCommand();
-        dk.execute(n);
-
+        System.out.println(dk.execute(n));
     }
 }
