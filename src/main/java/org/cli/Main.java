@@ -1,19 +1,19 @@
 package org.cli;
 import org.cli.commands.*;
+import org.cli.utils.pathresolvers.*;
 
+import javax.naming.spi.Resolver;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
-        Command cd = new cdCommand();
-        String[] arg = {"/home/mostafa/elgyar"};
-        System.out.println(cd.execute(arg));
-        Command pwd = new pwdCommand();
-        System.out.println(pwd.execute(arg));
-        String[] n = {"hello.txt"};
-        Command rm = new rmCommand();
-        System.out.println(rm.execute(n));
+
     }
 }

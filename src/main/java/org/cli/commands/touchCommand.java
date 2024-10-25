@@ -1,26 +1,50 @@
 package org.cli.commands;
+import org.cli.utils.DirectoryChecker;
 import org.cli.utils.FileSystemManager;
+import org.cli.utils.pathresolvers.PathResolver;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 
 public class touchCommand implements Command {
+    private PathResolver resolver ;
+    public touchCommand(PathResolver resolver){
+        this.resolver = resolver ;
+    }
+
     public String execute(String[] args) {
-        String path = FileSystemManager.getInstance().getCurrentDirectory();
-        String fileName = args[0];
-        File file = new File(path, fileName);
-        try {
-            if (file.createNewFile()) {
-                return null;
-            } else {
-                // If the file already exists, just update its timestamp
-                if (file.setLastModified(System.currentTimeMillis())) {
-                    return null;
-                } else {
-                    return "Failed to update the timestamp of the file.";
-                }
-            }
-        } catch (IOException e) {
-            return "An error occurred while creating the file: " + e.getMessage();
+        String pathStr = args[0];
+        if(!DirectoryChecker.isParentDirectory(pathStr,resolver))
+        {
+            return String.format("touch: cannot touch '%s: No such file or directory", pathStr);
         }
+        pathStr = resolver.resolve(pathStr);
+        Path path = Paths.get(pathStr);
+
+        if (Files.exists(path)) {
+            try{
+                FileTime fileTime = FileTime.fromMillis(System.currentTimeMillis());
+                Files.setLastModifiedTime(path, fileTime);
+                Files.setAttribute(path, "lastAccessTime", fileTime);
+                return null ;
+            }
+            catch (IOException e) {
+                return  "touch: An error occurred while creating the directory: " + e.getMessage() ;
+            }
+        }
+        else {
+            try {
+                Files.createFile(path);
+                return null;
+            }
+            catch (IOException e) {
+                return  "touch: An error occurred while creating the directory: " + e.getMessage() ;
+            }
+        }
+
     }
 }

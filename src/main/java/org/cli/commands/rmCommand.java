@@ -1,31 +1,43 @@
 package org.cli.commands;
+import org.cli.utils.DirectoryChecker;
 import org.cli.utils.FileSystemManager;
+import org.cli.utils.pathresolvers.PathResolver;
+
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class rmCommand implements Command{
-
+    private PathResolver resolver ;
+    public rmCommand(PathResolver resolver){
+        this.resolver = resolver ;
+    }
     public String execute(String[] args) {
-        if (args.length == 0) {
-            return "No file or directory specified.";
+        String pathStr = args[0];
+        pathStr = resolver.resolve(pathStr) ;
+        if(DirectoryChecker.isDirectory(pathStr,resolver))
+        {
+            return String.format("rm: cannot remove '%s': Is a directory", pathStr);
+        }
+        Path file = Paths.get(pathStr);
+
+        if (!Files.exists(file)) {
+            return String.format("rm: cannot remove '%s': No such file or directory", pathStr);
         }
 
-        String path = FileSystemManager.getInstance().getCurrentDirectory();
-        String name = args[0];
-        File file = new File(path, name);
-
-        if (!file.exists()) {
-            return "File or directory does not exist.";
+        try  {
+            Files.delete(file);
+            return null;
+        }
+        catch (SecurityException e){
+            return String.format("rm: failed to remove '%s': Operation not permitted", pathStr);
+        }
+        catch (Exception e) {
+            return String.format("rm: failed to remove '%s': %s", pathStr, e.getMessage());
         }
 
-        if (file.isDirectory()) {
-            return "rm: cannot remove '" + name + "/': Is a directory";
-        } else { // It's a file
-            if (file.delete()) {
-                return null;
-            } else {
-                return "Failed to remove the file.";
-            }
-        }
+
     }
 
 }
