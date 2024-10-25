@@ -11,12 +11,13 @@ public class cdCommand implements Command{
 
     @Override
     public String execute(String[] args) {
+        String path = resolver.resolve(args[0]);
         try {
-            String path = LinuxPathResolver.getInstance().resolve(args[0]);
             FileSystemManager.getInstance().changeDirectory(path, resolver);
             return null;
-        } catch (Exception e) {
-            return "Cannot find path";
+        }
+        catch (Exception e) {
+            return String.format("cd: %s: No such file or directory", path);
         }
     }
 }

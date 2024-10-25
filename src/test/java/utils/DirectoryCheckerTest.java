@@ -30,9 +30,9 @@ public class DirectoryCheckerTest {
     }
 
     @Test
-    void testNonValidDir() {
-        String NonValidDir = "~/notavaliddir55535";
-        assertFalse(DirectoryChecker.isDirectory(NonValidDir, resolver));
+    void testNonExistDir() {
+        String NonExistDir = "~/notavaliddir55535";
+        assertFalse(DirectoryChecker.isDirectory(NonExistDir, resolver));
     }
 
     @Test

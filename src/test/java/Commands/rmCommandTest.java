@@ -18,7 +18,7 @@ class rmCommandTest {
 
     @BeforeEach
     void setUp() {
-        resolver = new LinuxPathResolver();
+        resolver = LinuxPathResolver.getInstance();
         command = new rmCommand(resolver);
     }
 
