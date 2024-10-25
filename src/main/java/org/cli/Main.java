@@ -12,8 +12,8 @@ public class Main {
         System.out.println(cd.execute(arg));
         Command pwd = new pwdCommand();
         System.out.println(pwd.execute(arg));
-        String[] n = {"GGGeeeesssssss"};
-        Command dk = new rmdirCommand();
-        System.out.println(dk.execute(n));
+        String[] n = {"hello.txt"};
+        Command rm = new rmCommand();
+        System.out.println(rm.execute(n));
     }
 }
