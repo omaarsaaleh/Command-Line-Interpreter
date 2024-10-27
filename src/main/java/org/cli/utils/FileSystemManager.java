@@ -1,11 +1,8 @@
 package org.cli.utils;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import org.cli.utils.DirectoryChecker ;
 import org.cli.utils.pathresolvers.*;
 
 public class FileSystemManager {

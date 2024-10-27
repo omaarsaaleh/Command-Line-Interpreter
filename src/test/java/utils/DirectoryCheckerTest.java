@@ -13,7 +13,7 @@ public class DirectoryCheckerTest {
 
     @BeforeEach
     void setUp() {
-        resolver = LinuxPathResolver.getInstance();
+        resolver = PathResolverFactory.getResolver();
         fileManager = FileSystemManager.getInstance();
     }
 

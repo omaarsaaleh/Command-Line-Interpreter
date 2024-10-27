@@ -17,7 +17,7 @@ public class rmdirCommandTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        resolver = LinuxPathResolver.getInstance();
+        resolver = PathResolverFactory.getResolver();
         command = new rmdirCommand(resolver);
         tempDir = Files.createTempDirectory("testRmdir");
     }

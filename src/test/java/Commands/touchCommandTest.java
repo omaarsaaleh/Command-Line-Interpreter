@@ -19,7 +19,7 @@ public class touchCommandTest {
 
     @BeforeEach
     void setUp() {
-        resolver = LinuxPathResolver.getInstance();
+        resolver = PathResolverFactory.getResolver();
         touch = new touchCommand(resolver);
     }
 

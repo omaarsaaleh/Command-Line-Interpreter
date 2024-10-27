@@ -1,6 +1,5 @@
 package org.cli.commands;
 import org.cli.utils.DirectoryChecker;
-import org.cli.utils.FileSystemManager;
 import org.cli.utils.pathresolvers.PathResolver;
 
 import java.io.File;

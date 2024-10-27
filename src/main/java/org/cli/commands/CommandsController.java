@@ -2,15 +2,8 @@ package org.cli.commands;
 import org.cli.utils.CommandParser;
 import org.cli.utils.CustomFileWriter;
 import org.cli.utils.FileSystemManager;
-import org.cli.utils.pathresolvers.LinuxPathResolver;
 import org.cli.utils.pathresolvers.PathResolver;
 
-import javax.swing.plaf.synth.SynthDesktopIconUI;
-import java.io.Console;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 

@@ -1,12 +1,7 @@
 package org.cli.commands;
 import org.cli.utils.DirectoryChecker;
-import org.cli.utils.FileSystemManager;
 import org.cli.utils.pathresolvers.PathResolver;
-
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;

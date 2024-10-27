@@ -5,6 +5,7 @@ import org.cli.commands.mkdirCommand;
 import org.cli.utils.FileSystemManager;
 import org.cli.utils.pathresolvers.LinuxPathResolver;
 import org.cli.utils.pathresolvers.PathResolver;
+import org.cli.utils.pathresolvers.PathResolverFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ public class mkdirCommandTest {
 
     @BeforeEach
     void setUp() {
-        resolver = LinuxPathResolver.getInstance();
+        resolver = PathResolverFactory.getResolver();
         cd = new mkdirCommand(resolver);
     }
 

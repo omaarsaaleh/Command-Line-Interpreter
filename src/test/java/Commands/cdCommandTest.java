@@ -18,7 +18,7 @@ public class cdCommandTest {
 
     @BeforeEach
     void setUp() {
-        resolver = LinuxPathResolver.getInstance();
+        resolver = PathResolverFactory.getResolver();
         fileManager = FileSystemManager.getInstance();
         cd = new cdCommand(resolver);
     }

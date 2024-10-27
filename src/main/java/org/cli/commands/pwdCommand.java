@@ -1,7 +1,5 @@
 package org.cli.commands;
 import org.cli.utils.FileSystemManager;
-import org.cli.utils.pathresolvers.LinuxPathResolver;
-import org.cli.utils.pathresolvers.PathResolver;
 
 import java.util.EnumSet;
 
