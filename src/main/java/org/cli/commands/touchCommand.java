@@ -9,18 +9,62 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.util.EnumSet;
 
 public class touchCommand implements Command {
-    private PathResolver resolver ;
+
+    private final PathResolver resolver ;
+
+    private final EnumSet<touchCommand.Option> options;
+
+    public enum Option {
+        ;
+        public static touchCommand.Option get(String option) throws IllegalArgumentException {
+            switch (option) {
+                default : throw new IllegalArgumentException(String.format("Invalid option %s", option));
+            }
+        }
+    }
+
     public touchCommand(PathResolver resolver){
         this.resolver = resolver ;
+        this.options = EnumSet.noneOf(touchCommand.Option.class);
+    }
+
+    public void enableOption(touchCommand.Option option) {
+        options.add(option);
+    }
+
+    public void disableOption(touchCommand.Option option) {
+        options.remove(option);
+    }
+
+    public boolean hasOption(touchCommand.Option option) {
+        return options.contains(option);
+    }
+
+    @Override
+    public void addOptions(String[] options) throws IllegalArgumentException {
+        for(int i=0 ; i<options.length ; i++){
+            this.enableOption( touchCommand.Option.get( options[i] ));
+        }
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.NON_RETURNABLE;
+    }
+
+    @Override
+    public int getNumOfArguments() {
+        return 1 ;
     }
 
     public String execute(String[] args) {
         String pathStr = args[0];
         if(!DirectoryChecker.isParentDirectory(pathStr,resolver))
         {
-            return String.format("touch: cannot touch '%s: No such file or directory", pathStr);
+            throw new IllegalArgumentException(  String.format("cannot touch '%s: No such file or directory", pathStr) );
         }
         pathStr = resolver.resolve(pathStr);
         Path path = Paths.get(pathStr);
@@ -33,7 +77,7 @@ public class touchCommand implements Command {
                 return null ;
             }
             catch (IOException e) {
-                return  "touch: An error occurred while creating the directory: " + e.getMessage() ;
+                throw new IllegalArgumentException(   "An error occurred while creating the directory: " + e.getMessage() );
             }
         }
         else {
@@ -42,7 +86,7 @@ public class touchCommand implements Command {
                 return null;
             }
             catch (IOException e) {
-                return  "touch: An error occurred while creating the directory: " + e.getMessage() ;
+                throw new IllegalArgumentException(   "An error occurred while creating the directory: " + e.getMessage() );
             }
         }
 

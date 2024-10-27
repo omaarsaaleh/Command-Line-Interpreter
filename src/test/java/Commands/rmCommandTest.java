@@ -25,17 +25,16 @@ class rmCommandTest {
     @Test
     void testRemoveNonExistentFile() {
         String filePath = "nonexistentfile.txt";
-        String result = command.execute(new String[]{filePath});
+        assertThrows(IllegalArgumentException.class, () ->  command.execute(new String[]{filePath}) );
 
-        assertTrue(result.contains("No such file or directory") );
     }
 
     @Test
     void testRemoveDirectory() throws java.io.IOException{
 
         Path tempDir = Files.createTempDirectory("testdir");
-        String result = command.execute(new String[]{tempDir.toString()});
-        assertTrue(result.contains("Is a directory"));
+        assertThrows(IllegalArgumentException.class, () -> command.execute(new String[]{tempDir.toString()}));
+
 
     }
 

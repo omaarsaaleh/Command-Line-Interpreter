@@ -27,9 +27,8 @@ public class rmdirCommandTest {
         Path nonDirFile = Files.createFile(tempDir.resolve("file.txt"));
         String pathStr = nonDirFile.toString();
 
-        String result = command.execute(new String[]{pathStr});
+        assertThrows(IllegalArgumentException.class, () -> command.execute(new String[]{pathStr}));
 
-        assertTrue(result.contains("Not a directory") , result);
     }
 
     @Test
@@ -38,8 +37,9 @@ public class rmdirCommandTest {
         Files.createFile(nonEmptyDir.resolve("file.txt"));
 
         String pathStr = nonEmptyDir.toString();
-        String result = command.execute(new String[]{pathStr});
-        assertTrue(result.contains("Directory not empty") , result);
+
+        assertThrows(IllegalArgumentException.class, () -> command.execute(new String[]{pathStr}));
+
     }
 
     @Test

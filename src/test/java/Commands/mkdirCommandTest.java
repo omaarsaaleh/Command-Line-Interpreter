@@ -26,7 +26,7 @@ public class mkdirCommandTest {
 
     @Test
     void testExecuteValid(){
-        String validPath = "~/Documents/tst11";
+        String validPath = "~/Documents/tst111";
         String result = cd.execute(new String[]{validPath});
 
         assertNull(result);
@@ -39,17 +39,16 @@ public class mkdirCommandTest {
     void testExecuteAlreadyExists(){
         String validPath = "~/Documents";
 
-        String result = cd.execute(new String[]{validPath});
-
-        assertTrue(result.contains("File exists"));
-
         Path createdDir = Paths.get(resolver.resolve(validPath));
         assertTrue(Files.exists(createdDir));
+
+        assertThrows(IllegalArgumentException.class, () -> cd.execute(new String[]{validPath}));
+
     }
 
     @Test void testExecuteInvalidPath(){
         String invalidPath = "~/rrrererer3d/tst11";
-        String result = cd.execute(new String[]{invalidPath});
-        assertTrue(result.contains("No such file or directory"));
+        assertThrows(IllegalArgumentException.class, () -> cd.execute(new String[]{invalidPath}));
+
     }
 }

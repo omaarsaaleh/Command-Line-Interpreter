@@ -36,11 +36,10 @@ public class cdCommandTest {
     void testExecuteNonValidPath(){
         String curDir = fileManager.getCurrentDirectory() ;
         String validPath = "~/Documents/notavaliddirforsure55";
-        String result = cd.execute(new String[]{validPath});
 
-
-        assertEquals("Cannot find path", result);
         assertEquals(curDir, fileManager.getCurrentDirectory());
+        assertThrows(IllegalArgumentException.class, () -> cd.execute(new String[]{validPath}) );
+
     }
 
 }

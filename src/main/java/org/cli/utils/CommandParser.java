@@ -1,12 +1,16 @@
 package org.cli.utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.cli.commands.CommandFactory;
+import org.cli.commands.CommandType;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.cli.commands.* ;
+import org.cli.utils.pathresolvers.PathResolver;
 
 public class CommandParser {
-    public static List<String> parseCommand(String command) {
+    private static List<String> tokenize(String command) {
         List<String> parsedArgs = new ArrayList<>();
 
         String regex = "\"([^\"]*)\"|'([^']*)'|\\S+";
@@ -24,5 +28,53 @@ public class CommandParser {
         }
 
         return parsedArgs;
+    }
+
+
+    public static List<ParsedCommand> parse(String command, PathResolver resolver) {
+        List<String> tokens = CommandParser.tokenize(command);
+        List<String> symbols = Arrays.asList(">", "|", ">>");
+        List<ParsedCommand> pCmds = new ArrayList<ParsedCommand>() ;
+
+
+
+        for(int i=0 ; i<tokens.size() ; i++){
+            String cmd = tokens.get(i) ;
+            List<String> args = new ArrayList<String>() ;
+            List<String> options = new ArrayList<String>() ;
+
+            i++ ;
+            while( i<tokens.size() && !symbols.contains( tokens.get(i) )  ){
+                String token = tokens.get(i) ;
+                if(token.startsWith("-")){
+                    options.add(token) ;
+                }
+                else{
+                    args.add(token) ;
+                }
+                i++ ;
+            }
+            OutputDirection output = OutputDirection.TERMINAL ;
+            String file = null ;
+            if(i<tokens.size()){
+                switch (tokens.get(i)) {
+                    case ">" :
+                        output = OutputDirection.FILE_OVERWRITE;
+                        file = i+1 < tokens.size() ? resolver.resolve(tokens.get(++i))  : file  ;
+                        break;
+                    case ">>" :
+                        output = OutputDirection.FILE_APPEND;
+                        file = i+1 < tokens.size() ? resolver.resolve(tokens.get(++i)) : file ;
+                        break;
+                    case "|" :
+                        output = OutputDirection.PIPE;
+                        break;
+                };
+            }
+
+            pCmds.add(new ParsedCommand(cmd, args, options, output, file)) ;
+
+        }
+        return  pCmds ;
     }
 }

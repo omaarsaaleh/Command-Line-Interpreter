@@ -53,10 +53,10 @@ public class touchCommandTest {
 
     }
 
-    @Test void testExecuteInvalidPath(){
+    @Test
+    void testExecuteInvalidPath(){
         String invalidPath = "~/rrrererer3d/tst11";
-        String result = touch.execute(new String[]{invalidPath});
-        assertTrue(result.contains("No such file or directory"));
+        assertThrows(IllegalArgumentException.class, () -> touch.execute(new String[]{invalidPath}));
     }
 
 }
