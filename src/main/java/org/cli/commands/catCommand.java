@@ -1,16 +1,15 @@
 package org.cli.commands;
 
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.DirectoryChecker;
-import org.cli.utils.pathresolvers.*;
+import org.cli.utils.PathResolver;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 
 public class catCommand implements Command{
-    private final PathResolver resolver ;
     private final EnumSet<catCommand.Option> options;
 
     public enum Option {
@@ -22,8 +21,7 @@ public class catCommand implements Command{
         }
     }
 
-    public catCommand(PathResolver resolver){
-        this.resolver = resolver ;
+    public catCommand(){
         this.options = EnumSet.noneOf(catCommand.Option.class);
     }
 
@@ -66,13 +64,13 @@ public class catCommand implements Command{
         }
 
         String pathStr = args[0];
-        pathStr = resolver.resolve(pathStr) ;
+        pathStr = PathResolver.resolve(pathStr) ;
 
         Path file = Paths.get(pathStr);
         if (!Files.exists(file)) {
             throw new IllegalArgumentException( String.format("'%s': No such file or directory", pathStr) ) ;
         }
-        if(DirectoryChecker.isDirectory(pathStr,resolver)){
+        if(DirectoryChecker.isDirectory(pathStr)){
             throw new IllegalArgumentException( String.format("'%s': Is a directory", pathStr)) ;
         }
 

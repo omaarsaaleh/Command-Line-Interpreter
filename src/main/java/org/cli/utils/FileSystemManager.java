@@ -3,7 +3,6 @@ package org.cli.utils;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.cli.utils.pathresolvers.*;
 
 public class FileSystemManager {
     private static FileSystemManager instance;
@@ -28,9 +27,9 @@ public class FileSystemManager {
         return System.getProperty("user.home") + "/" ;
     }
 
-    public void changeDirectory(String pathStr, PathResolver resolver) throws IOException {
-        if (DirectoryChecker.isDirectory(pathStr, resolver)) {
-            currentDirectory = Paths.get(resolver.resolve(pathStr));
+    public void changeDirectory(String pathStr ) throws IOException {
+        if (DirectoryChecker.isDirectory(pathStr)) {
+            currentDirectory = Paths.get( pathStr );
         } else {
             throw new IOException("Invalid directory");
         }

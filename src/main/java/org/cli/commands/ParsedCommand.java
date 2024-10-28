@@ -1,5 +1,8 @@
 package org.cli.commands;
 
+import org.cli.commands.enums.CommandType;
+import org.cli.commands.enums.OutputDirection;
+
 import java.util.List;
 
 public class ParsedCommand {

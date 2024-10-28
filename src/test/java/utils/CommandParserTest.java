@@ -1,9 +1,7 @@
 package utils;
 
-import org.cli.commands.OutputDirection;
+import org.cli.commands.enums.OutputDirection;
 import org.cli.commands.ParsedCommand;
-import org.cli.utils.pathresolvers.LinuxPathResolver;
-import org.cli.utils.pathresolvers.PathResolver;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +16,7 @@ public class CommandParserTest {
     @Test
     public void testSingleCommandParsing() {
         String command = "echo 'Hello, World!'";
-        List<ParsedCommand> parsedCommands = CommandParser.parse(command, LinuxPathResolver.getInstance());
+        List<ParsedCommand> parsedCommands = CommandParser.parse(command);
 
         assertEquals(1, parsedCommands.size());
         ParsedCommand parsedCmd = parsedCommands.getFirst();
@@ -34,7 +32,7 @@ public class CommandParserTest {
     @Test
     public void testCommandWithRedirections() {
         String command = "cat t.txt >> f.txt";
-        List<ParsedCommand> parsedCommands = CommandParser.parse(command, LinuxPathResolver.getInstance());
+        List<ParsedCommand> parsedCommands = CommandParser.parse(command);
 
         assertEquals(1, parsedCommands.size());
         ParsedCommand parsedCmd = parsedCommands.getFirst() ;
@@ -48,7 +46,7 @@ public class CommandParserTest {
     @Test
     public void testCommandWithPipe() {
         String command = "ls | grep 'test'";
-        List<ParsedCommand> parsedCommands = CommandParser.parse(command, LinuxPathResolver.getInstance());
+        List<ParsedCommand> parsedCommands = CommandParser.parse(command);
 
         assertEquals(2, parsedCommands.size());
 

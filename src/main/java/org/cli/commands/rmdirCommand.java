@@ -1,14 +1,13 @@
 package org.cli.commands;
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.DirectoryChecker;
-import org.cli.utils.pathresolvers.PathResolver;
+import org.cli.utils.PathResolver;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 
 public class rmdirCommand implements Command{
-
-    private final PathResolver resolver ;
 
     private final EnumSet<rmdirCommand.Option> options;
 
@@ -21,8 +20,7 @@ public class rmdirCommand implements Command{
         }
     }
 
-    public rmdirCommand(PathResolver resolver){
-        this.resolver = resolver ;
+    public rmdirCommand(){
         this.options = EnumSet.noneOf(rmdirCommand.Option.class);
     }
 
@@ -65,14 +63,14 @@ public class rmdirCommand implements Command{
 
         String pathStr = args[0];
 
-        pathStr = resolver.resolve(pathStr) ;
+        pathStr = PathResolver.resolve(pathStr) ;
         Path directory = Paths.get(pathStr);
 
         if(!Files.exists(directory)){
             throw new IllegalArgumentException(String.format("failed to remove '%s': No such file or directory", pathStr)) ;
         }
 
-        if(!DirectoryChecker.isDirectory(pathStr,resolver))
+        if(!DirectoryChecker.isDirectory(pathStr))
         {
             throw new IllegalArgumentException(  String.format("failed to remove '%s': Not a directory", pathStr) );
         }

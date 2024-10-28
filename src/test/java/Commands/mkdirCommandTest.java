@@ -1,11 +1,7 @@
 package Commands;
 
-import com.sun.source.tree.AssertTree;
 import org.cli.commands.mkdirCommand;
-import org.cli.utils.FileSystemManager;
-import org.cli.utils.pathresolvers.LinuxPathResolver;
-import org.cli.utils.pathresolvers.PathResolver;
-import org.cli.utils.pathresolvers.PathResolverFactory;
+import org.cli.utils.PathResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,22 +13,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class mkdirCommandTest {
     private mkdirCommand cd ;
-    private PathResolver resolver;
 
     @BeforeEach
     void setUp() {
-        resolver = PathResolverFactory.getResolver();
-        cd = new mkdirCommand(resolver);
+        cd = new mkdirCommand();
     }
 
     @Test
     void testExecuteValid(){
-        String validPath = "~/Documents/tst111";
+        String validPath = "~/Documents/tst1111";
         String result = cd.execute(new String[]{validPath});
 
         assertNull(result);
 
-        Path createdDir = Paths.get(resolver.resolve(validPath));
+        Path createdDir = Paths.get(PathResolver.resolve(validPath));
         assertTrue(Files.exists(createdDir));
     }
 
@@ -40,7 +34,7 @@ public class mkdirCommandTest {
     void testExecuteAlreadyExists(){
         String validPath = "~/Documents";
 
-        Path createdDir = Paths.get(resolver.resolve(validPath));
+        Path createdDir = Paths.get(PathResolver.resolve(validPath));
         assertTrue(Files.exists(createdDir));
 
         assertThrows(IllegalArgumentException.class, () -> cd.execute(new String[]{validPath}));

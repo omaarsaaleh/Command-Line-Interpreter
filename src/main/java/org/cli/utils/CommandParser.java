@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.cli.commands.* ;
-import org.cli.utils.pathresolvers.PathResolver;
+import org.cli.commands.enums.OutputDirection;
 
 public class CommandParser {
     private static List<String> tokenize(String command) {
@@ -28,7 +28,7 @@ public class CommandParser {
     }
 
 
-    public static List<ParsedCommand> parse(String command, PathResolver resolver) {
+    public static List<ParsedCommand> parse(String command) {
         List<String> tokens = CommandParser.tokenize(command);
         List<String> symbols = Arrays.asList(">", "|", ">>");
         List<ParsedCommand> pCmds = new ArrayList<ParsedCommand>() ;
@@ -57,11 +57,11 @@ public class CommandParser {
                 switch (tokens.get(i)) {
                     case ">" :
                         output = OutputDirection.FILE_OVERWRITE;
-                        file = i+1 < tokens.size() ? resolver.resolve(tokens.get(++i))  : file  ;
+                        file = i+1 < tokens.size() ? PathResolver.resolve(tokens.get(++i))  : file  ;
                         break;
                     case ">>" :
                         output = OutputDirection.FILE_APPEND;
-                        file = i+1 < tokens.size() ? resolver.resolve(tokens.get(++i)) : file ;
+                        file = i+1 < tokens.size() ? PathResolver.resolve(tokens.get(++i)) : file ;
                         break;
                     case "|" :
                         output = OutputDirection.PIPE;

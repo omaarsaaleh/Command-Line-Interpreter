@@ -1,6 +1,6 @@
 package org.cli.commands;
 
-import java.io.IOException;
+import org.cli.commands.enums.CommandType;
 
 public interface Command {
      String execute(String[] args) ;

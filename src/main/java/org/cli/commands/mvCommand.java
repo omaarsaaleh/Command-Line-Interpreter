@@ -1,7 +1,8 @@
 package org.cli.commands;
 
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.DirectoryChecker;
-import org.cli.utils.pathresolvers.*;
+import org.cli.utils.PathResolver;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,8 +13,6 @@ import java.util.EnumSet;
 
 public class mvCommand implements Command{
     // mv [source_file_name(s)] [Destination_file_name]
-
-    private final PathResolver resolver ;
 
     private final EnumSet<mvCommand.Option> options;
 
@@ -26,8 +25,7 @@ public class mvCommand implements Command{
         }
     }
 
-    public mvCommand(PathResolver resolver){
-        this.resolver = resolver ;
+    public mvCommand(){
         this.options = EnumSet.noneOf(mvCommand.Option.class);
     }
 
@@ -70,8 +68,8 @@ public class mvCommand implements Command{
             throw new IllegalArgumentException("too many arguments");
         }
 
-        String source = resolver.resolve(args[0]);
-        String destination = resolver.resolve(args[1]);
+        String source = PathResolver.resolve(args[0]);
+        String destination = PathResolver.resolve(args[1]);
 
         Path sourceFile = Paths.get(source);
         Path destDir = Paths.get(destination);
@@ -79,14 +77,14 @@ public class mvCommand implements Command{
         if(!Files.exists(sourceFile)){
             throw new IllegalArgumentException( String.format("cannot stat '%s': No such file or directory", source) );
         }
-        if(!DirectoryChecker.isParentDirectory(destination,resolver)){
+        if(!DirectoryChecker.isParentDirectory(destination)){
             throw new IllegalArgumentException( String.format("cannot move '%s' to '%s': No such file or directory", source, destination) ) ;
         }
         if(!Files.exists(destDir)){
-            touchCommand touch = new touchCommand(resolver) ;
+            touchCommand touch = new touchCommand() ;
             touch.execute(new String[] {destination});
         }
-        else if(DirectoryChecker.isDirectory(destination,resolver)){
+        else if(DirectoryChecker.isDirectory(destination)){
             destDir = destDir.resolve(sourceFile.getFileName());
         }
 

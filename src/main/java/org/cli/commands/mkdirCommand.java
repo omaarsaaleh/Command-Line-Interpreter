@@ -1,5 +1,6 @@
 package org.cli.commands;
-import org.cli.utils.pathresolvers.PathResolver;
+import org.cli.commands.enums.CommandType;
+import org.cli.utils.PathResolver;
 import org.cli.utils.DirectoryChecker ;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,8 +9,6 @@ import java.nio.file.Paths;
 import java.util.EnumSet;
 
 public class mkdirCommand implements Command{
-
-    private final PathResolver resolver ;
 
     private final EnumSet<mkdirCommand.Option> options;
 
@@ -22,8 +21,7 @@ public class mkdirCommand implements Command{
         }
     }
 
-    public mkdirCommand(PathResolver resolver){
-        this.resolver = resolver ;
+    public mkdirCommand(){
         this.options = EnumSet.noneOf(mkdirCommand.Option.class);
     }
 
@@ -66,11 +64,11 @@ public class mkdirCommand implements Command{
         }
 
         String pathStr = args[0];
-        if(!DirectoryChecker.isParentDirectory(pathStr,resolver))
+        if(!DirectoryChecker.isParentDirectory(pathStr))
         {
             throw new IllegalArgumentException( String.format("cannot create directory ‘%s’: No such file or directory", pathStr));
         }
-        pathStr = resolver.resolve(pathStr);
+        pathStr = PathResolver.resolve(pathStr);
 
         Path path = Paths.get(pathStr);
 

@@ -1,18 +1,17 @@
 package org.cli.commands;
+import org.cli.commands.enums.CommandType;
+import org.cli.commands.enums.OutputDirection;
 import org.cli.utils.CommandParser;
 import org.cli.utils.CustomFileWriter;
 import org.cli.utils.FileSystemManager;
-import org.cli.utils.pathresolvers.PathResolver;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class CommandsController {
-    private final PathResolver RESOLVER ;
     private final FileSystemManager fManager ;
 
-    public CommandsController(PathResolver resolver){
-        this.RESOLVER = resolver ;
+    public CommandsController(){
         this.fManager = FileSystemManager.getInstance();
     }
 
@@ -34,7 +33,7 @@ public class CommandsController {
             String cmd = sc.nextLine();
             if (cmd.equals("exit")) break;
 
-            List<ParsedCommand> pCmds = CommandParser.parse(cmd, RESOLVER) ;
+            List<ParsedCommand> pCmds = CommandParser.parse(cmd) ;
 
             for(int i=0 ; i < pCmds.size() ; i++){
                 ParsedCommand pCmd = pCmds.get(i);

@@ -1,13 +1,12 @@
 package org.cli.commands;
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.FileSystemManager;
-import org.cli.utils.pathresolvers.*;
+import org.cli.utils.PathResolver;
 
 import java.util.EnumSet;
 
 
 public class cdCommand implements Command{
-
-    private final PathResolver resolver ;
 
     private final EnumSet<cdCommand.Option> options;
 
@@ -20,8 +19,7 @@ public class cdCommand implements Command{
         }
     }
 
-    public cdCommand(PathResolver resolver){
-        this.resolver = resolver ;
+    public cdCommand(){
         this.options = EnumSet.noneOf(cdCommand.Option.class);
     }
 
@@ -63,9 +61,9 @@ public class cdCommand implements Command{
             throw new IllegalArgumentException("too many arguments");
         }
 
-        String path = resolver.resolve(args[0]);
+        String path = PathResolver.resolve(args[0]);
         try {
-            FileSystemManager.getInstance().changeDirectory(path, resolver);
+            FileSystemManager.getInstance().changeDirectory(path);
             return null;
         }
         catch (Exception e) {

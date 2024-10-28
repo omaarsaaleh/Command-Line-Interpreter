@@ -1,26 +1,21 @@
 package Commands;
 
 import org.cli.utils.FileSystemManager;
-import org.cli.utils.pathresolvers.LinuxPathResolver;
+import org.cli.utils.PathResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.cli.commands.cdCommand;
-import org.cli.utils.pathresolvers.*;
-
-import javax.naming.spi.Resolver;
 
 public class cdCommandTest {
     private cdCommand cd ;
-    private PathResolver resolver;
     private FileSystemManager fileManager ;
 
     @BeforeEach
     void setUp() {
-        resolver = PathResolverFactory.getResolver();
         fileManager = FileSystemManager.getInstance();
-        cd = new cdCommand(resolver);
+        cd = new cdCommand();
     }
 
     @Test
@@ -29,7 +24,7 @@ public class cdCommandTest {
         String result = cd.execute(new String[]{validPath});
 
         assertNull(result);
-        assertEquals(resolver.resolve(validPath), fileManager.getCurrentDirectory());
+        assertEquals(PathResolver.resolve(validPath), fileManager.getCurrentDirectory());
     }
 
     @Test

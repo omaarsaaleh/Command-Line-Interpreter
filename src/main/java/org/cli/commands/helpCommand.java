@@ -1,13 +1,26 @@
 package org.cli.commands;
+import org.cli.commands.enums.CommandType;
+
+import java.util.EnumSet;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 
 public class helpCommand implements Command {
     private static Map<String, String> commands;
+    private final EnumSet<helpCommand.Option> options;
+
+    public enum Option {
+        ;
+        public static helpCommand.Option get(String option) throws IllegalArgumentException {
+            switch (option) {
+                default : throw new IllegalArgumentException(String.format("Invalid option %s", option));
+            }
+        }
+    }
 
     static {
-        commands = new HashMap<>();
+        commands = new LinkedHashMap<>();
         commands.put("pwd", "Print the current working directory.");
         commands.put("cd", "Change the current directory.");
         commands.put("ls", "List directory contents.");
@@ -21,10 +34,31 @@ public class helpCommand implements Command {
         commands.put("exit", "Exit the The Terminal.");
     }
 
+
+    public helpCommand(){
+        this.options = EnumSet.noneOf(helpCommand.Option.class);
+    }
+
+    public void enableOption(helpCommand.Option option) {
+        options.add(option);
+    }
+
+    public void disableOption(helpCommand.Option option) {
+        options.remove(option);
+    }
+
+    public boolean hasOption(helpCommand.Option option) {
+        return options.contains(option);
+    }
+
+
     @Override
     public void addOptions(String[] options) throws IllegalArgumentException {
-        //
+        for(int i=0 ; i<options.length ; i++){
+            this.enableOption( helpCommand.Option.get( options[i] ));
+        }
     }
+
 
     @Override
     public CommandType getCommandType() {
@@ -38,9 +72,10 @@ public class helpCommand implements Command {
 
     @Override
     public String execute(String[] args){
+        StringBuilder helpMessage = new StringBuilder();
         for (Map.Entry<String, String> entry : commands.entrySet()) {
-            System.out.printf("  %s: %s%n", entry.getKey(), entry.getValue());
+            helpMessage.append(String.format("  %s: %s%n", entry.getKey(), entry.getValue()));
         }
-        return null;
+        return helpMessage.toString();
     }
 }

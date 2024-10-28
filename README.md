@@ -8,7 +8,7 @@ This project implements a basic Command Line Interpreter (CLI) that mimics the f
 
 ### Command Execution
 
-The CLI can execute thessee following system commands:
+The CLI can execute this following system commands:
 
 - `pwd`: Print the current working directory.
 - `cd <directory>`: Change the current directory to `<directory>`.

@@ -1,7 +1,6 @@
 package Commands;
 
 import org.cli.commands.rmdirCommand;
-import org.cli.utils.pathresolvers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,14 +10,12 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class rmdirCommandTest {
-    private PathResolver resolver;
     private rmdirCommand command;
     private Path tempDir;
 
     @BeforeEach
     public void setUp() throws Exception {
-        resolver = PathResolverFactory.getResolver();
-        command = new rmdirCommand(resolver);
+        command = new rmdirCommand();
         tempDir = Files.createTempDirectory("testRmdir");
     }
 

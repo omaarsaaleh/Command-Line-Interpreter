@@ -1,4 +1,4 @@
-package org.cli.commands;
+package org.cli.commands.enums;
 
 public enum CommandType {
     RETURNABLE,

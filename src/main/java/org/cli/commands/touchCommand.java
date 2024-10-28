@@ -1,6 +1,7 @@
 package org.cli.commands;
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.DirectoryChecker;
-import org.cli.utils.pathresolvers.PathResolver;
+import org.cli.utils.PathResolver;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,8 +10,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.EnumSet;
 
 public class touchCommand implements Command {
-
-    private final PathResolver resolver ;
 
     private final EnumSet<touchCommand.Option> options;
 
@@ -23,8 +22,7 @@ public class touchCommand implements Command {
         }
     }
 
-    public touchCommand(PathResolver resolver){
-        this.resolver = resolver ;
+    public touchCommand(){
         this.options = EnumSet.noneOf(touchCommand.Option.class);
     }
 
@@ -59,11 +57,11 @@ public class touchCommand implements Command {
 
     public String execute(String[] args) {
         String pathStr = args[0];
-        if(!DirectoryChecker.isParentDirectory(pathStr,resolver))
+        if(!DirectoryChecker.isParentDirectory(pathStr ))
         {
             throw new IllegalArgumentException(  String.format("cannot touch '%s: No such file or directory", pathStr) );
         }
-        pathStr = resolver.resolve(pathStr);
+        pathStr = PathResolver.resolve(pathStr);
         Path path = Paths.get(pathStr);
 
         if (Files.exists(path)) {

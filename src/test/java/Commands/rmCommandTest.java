@@ -1,7 +1,6 @@
 package Commands;
 
 import org.cli.commands.rmCommand;
-import org.cli.utils.pathresolvers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,12 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class rmCommandTest {
 
     private rmCommand command;
-    private PathResolver resolver;
 
     @BeforeEach
     void setUp() {
-        resolver = PathResolverFactory.getResolver();
-        command = new rmCommand(resolver);
+        command = new rmCommand();
     }
 
     @Test

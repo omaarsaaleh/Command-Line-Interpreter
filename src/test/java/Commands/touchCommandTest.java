@@ -1,7 +1,7 @@
 package Commands;
 
 import org.cli.commands.touchCommand;
-import org.cli.utils.pathresolvers.*;
+import org.cli.utils.PathResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,12 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class touchCommandTest {
     private touchCommand touch ;
-    private PathResolver resolver;
 
     @BeforeEach
     void setUp() {
-        resolver = PathResolverFactory.getResolver();
-        touch = new touchCommand(resolver);
+        touch = new touchCommand();
     }
 
     @Test
@@ -30,7 +28,7 @@ public class touchCommandTest {
 
         assertNull(result, "Error Creating the file (not the expected return)");
 
-        Path createdFile = Paths.get(resolver.resolve(validPath));
+        Path createdFile = Paths.get(PathResolver.resolve(validPath));
         assertTrue(Files.exists(createdFile),"Error Creating the file (exist test failed)");
     }
 
@@ -44,7 +42,7 @@ public class touchCommandTest {
 
         String result = touch.execute(new String[]{validPath});
 
-        Path file = Paths.get( resolver.resolve(validPath)) ;
+        Path file = Paths.get( PathResolver.resolve(validPath)) ;
         FileTime updatedtime = Files.getLastModifiedTime(file) ;
         FileTime accesstime = (FileTime) Files.getAttribute(file, "lastAccessTime");
 

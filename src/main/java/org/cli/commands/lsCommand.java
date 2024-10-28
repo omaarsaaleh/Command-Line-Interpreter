@@ -1,8 +1,9 @@
 package org.cli.commands;
 
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.DirectoryChecker;
 import org.cli.utils.FileSystemManager;
-import org.cli.utils.pathresolvers.PathResolver;
+import org.cli.utils.PathResolver;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,8 +15,6 @@ import java.util.stream.Stream;
 
 public class lsCommand implements Command{
     private final EnumSet<Option> options;
-
-    private final PathResolver resolver ;
 
     public enum Option {
         ALL,
@@ -30,9 +29,7 @@ public class lsCommand implements Command{
         }
     }
 
-    public lsCommand(PathResolver resolver)
-    {
-        this.resolver = resolver ;
+    public lsCommand() {
         this.options = EnumSet.noneOf(Option.class);
     }
 
@@ -109,7 +106,7 @@ public class lsCommand implements Command{
         StringBuilder result = new StringBuilder("") ;
 
         for(int i=0 ; i<args.length ; i++) {
-            String pathStr = resolver.resolve(args[i]);
+            String pathStr = PathResolver.resolve(args[i]);
             Boolean isRecursive = this.hasOption(Option.RECURSIVE);
             Boolean showHidden = this.hasOption(Option.ALL);
 
@@ -118,7 +115,7 @@ public class lsCommand implements Command{
                 result.append (String.format("cannot access '%s': No such file or directory\n\n", pathStr));
                 continue;
             }
-            if (!DirectoryChecker.isDirectory(pathStr, resolver)) {
+            if (!DirectoryChecker.isDirectory(pathStr)) {
                 result.append( path.getFileName().toString() + "\n\n" );
                 continue;
             }

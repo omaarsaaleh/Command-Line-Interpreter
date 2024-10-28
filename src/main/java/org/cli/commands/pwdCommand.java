@@ -1,4 +1,5 @@
 package org.cli.commands;
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.FileSystemManager;
 
 import java.util.EnumSet;

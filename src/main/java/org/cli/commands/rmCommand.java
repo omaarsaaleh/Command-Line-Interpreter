@@ -1,16 +1,14 @@
 package org.cli.commands;
+import org.cli.commands.enums.CommandType;
 import org.cli.utils.DirectoryChecker;
-import org.cli.utils.pathresolvers.PathResolver;
+import org.cli.utils.PathResolver;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 
 public class rmCommand implements Command{
-
-    private final PathResolver resolver ;
 
     private final EnumSet<rmCommand.Option> options;
 
@@ -23,8 +21,7 @@ public class rmCommand implements Command{
         }
     }
 
-    public rmCommand(PathResolver resolver){
-        this.resolver = resolver ;
+    public rmCommand(){
         this.options = EnumSet.noneOf(rmCommand.Option.class);
     }
 
@@ -67,8 +64,8 @@ public class rmCommand implements Command{
         }
 
         String pathStr = args[0];
-        pathStr = resolver.resolve(pathStr) ;
-        if(DirectoryChecker.isDirectory(pathStr,resolver))
+        pathStr = PathResolver.resolve(pathStr) ;
+        if(DirectoryChecker.isDirectory(pathStr))
         {
             throw new IllegalArgumentException(  String.format("cannot remove '%s': Is a directory", pathStr) );
         }
