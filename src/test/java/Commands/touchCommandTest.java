@@ -30,6 +30,13 @@ public class touchCommandTest {
 
         Path createdFile = Paths.get(PathResolver.resolve(validPath));
         assertTrue(Files.exists(createdFile),"Error Creating the file (exist test failed)");
+
+        if (Files.exists(createdFile)) {
+            try {
+                Files.delete(createdFile);
+            }
+            catch (IOException e) {}
+        }
     }
 
     @Test
@@ -49,6 +56,10 @@ public class touchCommandTest {
         assertNotEquals(fileTime, updatedtime );
         assertNotEquals(fileTime, accesstime);
 
+        if (Files.exists(file)) {
+            Files.delete(file);
+        }
+
     }
 
     @Test
@@ -56,5 +67,7 @@ public class touchCommandTest {
         String invalidPath = "~/rrrererer3d/tst11";
         assertThrows(IllegalArgumentException.class, () -> touch.execute(new String[]{invalidPath}));
     }
+
+
 
 }

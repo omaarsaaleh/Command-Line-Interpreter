@@ -30,7 +30,7 @@ public class CommandsController {
         while(true){
             prompt();
 
-            String cmd = sc.nextLine();
+            String cmd = sc.nextLine().trim();
             if (cmd.equals("exit")) break;
 
             List<ParsedCommand> pCmds = CommandParser.parse(cmd) ;

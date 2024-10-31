@@ -5,6 +5,7 @@ import org.cli.utils.PathResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +29,14 @@ public class mkdirCommandTest {
 
         Path createdDir = Paths.get(PathResolver.resolve(validPath));
         assertTrue(Files.exists(createdDir));
+
+        if (Files.exists(createdDir)) {
+            try {
+                Files.delete(createdDir);
+            } catch (IOException e) {
+
+            }
+        }
     }
 
     @Test
