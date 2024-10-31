@@ -5,25 +5,28 @@ import org.cli.utils.DirectoryChecker;
 import org.cli.utils.FileSystemManager;
 import org.cli.utils.PathResolver;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class lsCommand implements Command{
+public class lsCommand implements Command {
     private final EnumSet<Option> options;
 
     public enum Option {
         ALL,
-        RECURSIVE;
+        REVERSE;
 
         public static Option get(String option) throws IllegalArgumentException {
             return switch (option) {
                 case "-a", "--all" -> ALL;
-                case "-R", "--recursive" -> RECURSIVE;
+                case "-r", "--reverse" -> REVERSE;
                 default -> throw new IllegalArgumentException(String.format("Invalid option %s", option));
             };
         }
@@ -34,9 +37,9 @@ public class lsCommand implements Command{
     }
 
     @Override
-    public void addOptions(String[] options) throws IllegalArgumentException{
-        for(int i=0 ; i<options.length ; i++){
-            this.enableOption( Option.get( options[i] ));
+    public void addOptions(String[] options) throws IllegalArgumentException {
+        for (String option : options) {
+            this.enableOption(Option.get(option));
         }
     }
 
@@ -54,79 +57,58 @@ public class lsCommand implements Command{
 
     @Override
     public CommandType getCommandType() {
-        return CommandType.RETURNABLE ;
+        return CommandType.RETURNABLE;
     }
 
     @Override
     public int getNumOfArguments() {
-        return 1 ;
-    }
-
-    public StringBuilder List(Path path, Boolean isRecursive, Boolean showHidden, StringBuilder result, String currentDir ){
-
-        List<Path> nxt = new ArrayList<>() ;
-        try (Stream<Path> files = Files.list(path)) {
-            result.append(String.format(".%s:\n", currentDir)) ;
-
-            Iterable<Path> fileList = (Iterable<Path>) files::iterator ;
-            boolean in = false ;
-            for (Path file : fileList) {
-                try {
-                    if (!Files.isHidden(file) || showHidden) {
-                        in = true ;
-                        result.append(file.getFileName().toString()).append(" ");
-                        if(Files.isDirectory(file)){
-                            nxt.add(file) ;
-                        }
-                    }
-
-                } catch (Exception e) {}
-            }
-            if(in) result.append("\n");
-            result.append("\n");
-            if(isRecursive) {
-                for (Path dir : nxt) {
-                    result = List(dir, isRecursive, showHidden, result,
-                            currentDir + String.format("/%s", dir.getFileName().toString()));
-                }
-            }
-        } catch (Exception e) {
-
-        }
-
-        return result ;
+        return 1;
     }
 
     @Override
     public String execute(String[] args) {
-        if(args.length == 0){
-            args = new String[]{FileSystemManager.getInstance().getCurrentDirectory()} ;
+        if (args.length == 0) {
+            args = new String[]{FileSystemManager.getInstance().getCurrentDirectory()};
         }
+        StringBuilder result = new StringBuilder();
+        boolean showHidden = this.hasOption(Option.ALL);
+        boolean reverseOrder = this.hasOption(Option.REVERSE);
 
-        StringBuilder result = new StringBuilder("") ;
-
-        for(int i=0 ; i<args.length ; i++) {
-            String pathStr = PathResolver.resolve(args[i]);
-            Boolean isRecursive = this.hasOption(Option.RECURSIVE);
-            Boolean showHidden = this.hasOption(Option.ALL);
-
+        for (String arg : args) {
+            String pathStr = PathResolver.resolve(arg);
             Path path = Paths.get(pathStr);
+
             if (!Files.exists(path)) {
-                result.append (String.format("cannot access '%s': No such file or directory\n\n", pathStr));
+                result.append(String.format("cannot access '%s': No such file or directory\n\n", pathStr));
                 continue;
             }
+
             if (!DirectoryChecker.isDirectory(pathStr)) {
-                result.append( path.getFileName().toString() + "\n\n" );
+                result.append(path.getFileName().toString()).append("\n\n");
                 continue;
             }
-            String cur =
-                    this.List(path, isRecursive, showHidden, new StringBuilder(), "").toString();
-            if (cur != "") result.append(cur) ;
-            else result.append( (String.format("ls: cannot access '%s'", pathStr)) );
+
+            List<Path> filesList = new ArrayList<>();
+            try (Stream<Path> files = Files.list(path)) {
+
+                filesList = files
+                        .filter(file -> { boolean hid = false ; try{ hid=!Files.isHidden(file);} catch (IOException _) {}  return showHidden || hid;  } )
+                        .sorted((p1, p2) -> reverseOrder ? p2.compareTo(p1) : p1.compareTo(p2))
+                        .toList();
+
+                result.append(".:\n");
+                for (Path file : filesList) {
+                    result.append(file.getFileName().toString());
+                    if (Files.isDirectory(file)) {
+                        result.append("/");
+                    }
+                    result.append(" ");
+                }
+            }
+            catch (Exception e) {
+                result.append(String.format("cannot access '%s'", pathStr));
+            }
         }
-
-        String res = result.toString() ;
-        return res.substring(0, res.length()-2);
-
+        return result.toString();
     }
 }
